@@ -1,3 +1,4 @@
+from rest_framework.relations import PrimaryKeyRelatedField
 from rest_framework import serializers
 from .models import User, Category, Housework
 
@@ -18,6 +19,8 @@ class CategorySerializer(serializers.ModelSerializer):
 
 
 class HouseworkSerializer(serializers.ModelSerializer):
+
+    category = PrimaryKeyRelatedField(queryset=Category.objects.all())
     class Meta:
         model = Housework
         fields = (
@@ -28,4 +31,8 @@ class HouseworkSerializer(serializers.ModelSerializer):
             'estimated_time',
             'create_user',
         )
-        
+    
+    def to_representation(self, instance):
+        ret = super().to_representation(instance)
+        ret['category'] = CategorySerializer(context=self.context).to_representation(instance.category)
+        return ret
