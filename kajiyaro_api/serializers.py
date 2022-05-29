@@ -3,11 +3,12 @@ from rest_framework import serializers
 from .models import User, Category, Housework
 
 
-# class UserSerializer(serializers.ModelSerializer):
-    
-#     class Meta:
-#         model = User
-#         fields = ('id', 'username', 'password')
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('id', 'username', 'password')
+        extra_kwargs = {'password': {'write_only': True, 'required': True, 'min_length': 8}}
+
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
@@ -21,6 +22,7 @@ class CategorySerializer(serializers.ModelSerializer):
 class HouseworkSerializer(serializers.ModelSerializer):
 
     category = PrimaryKeyRelatedField(queryset=Category.objects.all())
+    # username = serializers.ReadOnlyField(source='user.username', read_only=True)
     class Meta:
         model = Housework
         fields = (
