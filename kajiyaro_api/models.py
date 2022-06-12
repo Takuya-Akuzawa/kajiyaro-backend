@@ -12,12 +12,11 @@ class User(AbstractUser):
 
 class Category(models.Model):
 
-    category = models.CharField(max_length=32)
+    category_name = models.CharField(max_length=32)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-
     def __str__(self):
-        return str(self.id) + " - " + self.category
+        return str(self.id) + " - " + self.category_name
     
     class Meta:
         db_table = 'categories'
@@ -38,3 +37,19 @@ class Housework(models.Model):
 
     class Meta:
         db_table = 'houseworks'
+
+
+class Task(models.Model):
+    task_name = models.CharField(max_length=32)
+    category = models.ForeignKey(Category, related_name='tasks', on_delete=models.CASCADE)
+    status = models.CharField(max_length=10)
+    assigned_user = models.ForeignKey(User, related_name='tasks', on_delete=models.CASCADE)
+    scheduled_date = models.DateField(blank=True, null=True)
+    result_date = models.DateField(blank=True, null=True)
+    result_time = models.IntegerField(blank=True, null=True)
+
+    def __str__(self):
+        return str(self.id) + " - " + self.task_name
+
+    class Meta:
+        db_table = 'tasks'

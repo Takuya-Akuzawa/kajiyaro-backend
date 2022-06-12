@@ -1,6 +1,7 @@
+from dataclasses import field
 from rest_framework.relations import PrimaryKeyRelatedField
 from rest_framework import serializers
-from .models import User, Category, Housework
+from .models import Task, User, Category, Housework
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -15,14 +16,14 @@ class CategorySerializer(serializers.ModelSerializer):
         model = Category
         fields = (
             'id',
-            'category',
+            'category_name',
         )
 
 
 class HouseworkSerializer(serializers.ModelSerializer):
 
     category = PrimaryKeyRelatedField(queryset=Category.objects.all())
-    # username = serializers.ReadOnlyField(source='user.username', read_only=True)
+    create_user = PrimaryKeyRelatedField(queryset=User.objects.all())
     class Meta:
         model = Housework
         fields = (
@@ -37,4 +38,32 @@ class HouseworkSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         ret = super().to_representation(instance)
         ret['category'] = CategorySerializer(context=self.context).to_representation(instance.category)
+        ret['create_user'] = UserSerializer(context=self.context).to_representation(instance.create_user)
         return ret
+
+    
+class TaskSerializer(serializers.ModelSerializer):
+
+    category = PrimaryKeyRelatedField(queryset=Category.objects.all())
+    assigned_user = PrimaryKeyRelatedField(queryset=User.objects.all())
+
+    class Meta:
+        model = Task
+        fields = (
+            'id',
+            'task_name',
+            'category',
+            'status',
+            'assigned_user',
+            'scheduled_date',
+            'result_date',
+            'result_time',
+        )
+
+    def to_representation(self, instance):
+        ret = super().to_representation(instance)
+        ret['category'] = CategorySerializer(context=self.context).to_representation(instance.category)
+        ret['assigned_user'] = UserSerializer(context=self.context).to_representation(instance.assigned_user)
+        return ret
+
+    
