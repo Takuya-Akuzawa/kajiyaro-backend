@@ -3,11 +3,13 @@ from django.db import router
 from django.urls import path
 from rest_framework import routers
 from .views import HouseworkViewSet, HouseworkListView, HouseworkRetrieveView, \
-                    CategoryViewSet, CategoryListView, CategoryRetrieveView
+                    CategoryViewSet, CategoryListView, CategoryRetrieveView, \
+                    TaskViewSet, TaskListView, TaskRetrieveView
 
 router = routers.DefaultRouter()
 router.register(r'categories', CategoryViewSet, basename='categories')
 router.register(r'houseworks', HouseworkViewSet, basename='houseworks')
+router.register(r'tasks', TaskViewSet, basename='tasks')
 
 urlpatterns = [
     path('list-housework/', HouseworkListView.as_view(), name='list-housework'),
@@ -15,6 +17,9 @@ urlpatterns = [
     
     path('list-category/', CategoryListView.as_view(), name='list-category'),
     path('detail-category/<str:pk>/', CategoryRetrieveView.as_view(), name='detail-category'),
+
+    path('list-task/', TaskListView.as_view(), name='list-task'),
+    path('detail-task/<str:pk>/', TaskRetrieveView.as_view(), name='detail-task'),
     
     path('auth/', include('djoser.urls.jwt')),
     path('', include(router.urls)),

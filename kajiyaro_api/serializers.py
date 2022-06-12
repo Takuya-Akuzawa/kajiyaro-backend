@@ -1,6 +1,7 @@
+from dataclasses import field
 from rest_framework.relations import PrimaryKeyRelatedField
 from rest_framework import serializers
-from .models import User, Category, Housework
+from .models import Task, User, Category, Housework
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -38,3 +39,21 @@ class HouseworkSerializer(serializers.ModelSerializer):
         ret = super().to_representation(instance)
         ret['category'] = CategorySerializer(context=self.context).to_representation(instance.category)
         return ret
+
+    
+class TaskSerializer(serializers.ModelSerializer):
+
+    category = PrimaryKeyRelatedField(queryset=Category.objects.all())
+
+    class Meta:
+        model = Task
+        fields = (
+            'id',
+            'task_name',
+            'category',
+            'status',
+            'assigned_user',
+            'scheduled_date',
+            'result_date',
+            'result_time',
+        )
