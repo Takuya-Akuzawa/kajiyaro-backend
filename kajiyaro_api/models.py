@@ -12,12 +12,11 @@ class User(AbstractUser):
 
 class Category(models.Model):
 
-    category = models.CharField(max_length=32)
+    category_name = models.CharField(max_length=32)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-
     def __str__(self):
-        return str(self.id) + " - " + self.category
+        return str(self.id) + " - " + self.category_name
     
     class Meta:
         db_table = 'categories'
