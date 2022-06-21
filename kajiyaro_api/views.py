@@ -1,7 +1,19 @@
 from rest_framework.permissions import AllowAny
 from rest_framework import viewsets, generics
-from .serializers import CategorySerializer, HouseworkSerializer, TaskSerializer
-from .models import Category, Housework, Task
+from .serializers import UserSerializer, CategorySerializer, HouseworkSerializer, TaskSerializer
+from .models import Category, Housework, Task, User
+
+
+class UserListView(generics.ListAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = (AllowAny,)
+
+class UserRetrieveView(generics.RetrieveAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = (AllowAny,)
+
 
 class HouseworkListView(generics.ListAPIView):
     queryset = Housework.objects.all()
